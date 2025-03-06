@@ -36,9 +36,7 @@ class EIL(PVPTD3):
             should_concat = True
 
         elif self.human_data_buffer.pos > 0:
-            replay_data = self.human_data_buffer.sample(
-                batch_size, env=self._vec_normalize_env, return_all=True
-            )
+            replay_data = self.human_data_buffer.sample(batch_size, env=self._vec_normalize_env, return_all=True)
         elif self.replay_buffer.pos > 0:
             replay_data = self.replay_buffer.sample(batch_size, env=self._vec_normalize_env)
         else:
@@ -122,9 +120,8 @@ class EIL(PVPTD3):
 
                 # BC loss on human data
                 bc_loss = F.mse_loss(replay_data.actions_behavior, new_action, reduction="none").mean(axis=-1)
-                masked_bc_loss = (replay_data.interventions.flatten() * bc_loss).sum() / (
-                        replay_data.interventions.flatten().sum() + 1e-5
-                )
+                masked_bc_loss = (replay_data.interventions.flatten() *
+                                  bc_loss).sum() / (replay_data.interventions.flatten().sum() + 1e-5)
                 # masked_bc_loss = masked_bc_loss.mean()
 
                 if self.extra_config["only_bc_loss"]:
