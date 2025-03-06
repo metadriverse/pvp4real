@@ -57,7 +57,9 @@ bash scripts/metadrive_simhuman_hgdagger.sh
 Here is the example on how to launch PVP4Real:
 
 ```bash
-python pvp/experiments/metadrive/train_pvp_metadrive_fakehuman.py --exp_name="pvp4real" --bc_loss_weight=1.0
+python pvp/experiments/metadrive/train_pvp_metadrive_fakehuman.py \
+--exp_name="pvp4real" \
+--bc_loss_weight=1.0
 ```
 
 
