@@ -35,7 +35,8 @@ class PVPTD3(TD3):
         self.extra_config = {}
         for k in ["no_done_for_positive", "no_done_for_negative", "reward_0_for_positive", "reward_0_for_negative",
                   "reward_n2_for_intervention", "reward_1_for_all", "use_weighted_reward", "remove_negative",
-                  "adaptive_batch_size", "add_bc_loss", "only_bc_loss", "with_human_proxy_value_loss", "with_agent_proxy_value_loss"]:
+                  "adaptive_batch_size", "add_bc_loss", "only_bc_loss", "with_human_proxy_value_loss",
+                  "with_agent_proxy_value_loss"]:
             if k in kwargs:
                 v = kwargs.pop(k)
                 assert v in ["True", "False"]
@@ -87,9 +88,7 @@ class PVPTD3(TD3):
             should_concat = True
 
         elif self.human_data_buffer.pos > 0:
-            replay_data = self.human_data_buffer.sample(
-                batch_size, env=self._vec_normalize_env, return_all=True
-            )
+            replay_data = self.human_data_buffer.sample(batch_size, env=self._vec_normalize_env, return_all=True)
         elif self.replay_buffer.pos > 0:
             replay_data = self.replay_buffer.sample(batch_size, env=self._vec_normalize_env)
         else:
@@ -141,16 +140,14 @@ class PVPTD3(TD3):
 
                 if with_human_proxy_value_loss:
                     l += th.mean(
-                        replay_data.interventions * self.cql_coefficient *
-                        F.mse_loss(
+                        replay_data.interventions * self.cql_coefficient * F.mse_loss(
                             current_q_behavior, self.q_value_bound * th.ones_like(current_q_behavior), reduction="none"
                         )
                     )
 
                 if with_agent_proxy_value_loss:
                     l += th.mean(
-                        replay_data.interventions * self.cql_coefficient *
-                        F.mse_loss(
+                        replay_data.interventions * self.cql_coefficient * F.mse_loss(
                             current_q_novice, -self.q_value_bound * th.ones_like(current_q_behavior), reduction="none"
                         )
                     )
@@ -171,9 +168,8 @@ class PVPTD3(TD3):
 
                 # BC loss on human data
                 bc_loss = F.mse_loss(replay_data.actions_behavior, new_action, reduction="none").mean(axis=-1)
-                masked_bc_loss = (replay_data.interventions.flatten() * bc_loss).sum() / (
-                    replay_data.interventions.flatten().sum() + 1e-5
-                )
+                masked_bc_loss = (replay_data.interventions.flatten() *
+                                  bc_loss).sum() / (replay_data.interventions.flatten().sum() + 1e-5)
 
                 if self.extra_config["only_bc_loss"]:
                     actor_loss = masked_bc_loss

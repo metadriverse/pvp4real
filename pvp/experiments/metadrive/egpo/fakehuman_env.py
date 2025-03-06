@@ -63,9 +63,9 @@ def obs_correction(obs):
 
 
 def normpdf(x, mean, sd):
-    var = float(sd) ** 2
-    denom = (2 * math.pi * var) ** .5
-    num = math.exp(-(float(x) - float(mean)) ** 2 / (2 * var))
+    var = float(sd)**2
+    denom = (2 * math.pi * var)**.5
+    num = math.exp(-(float(x) - float(mean))**2 / (2 * var))
     return num / denom
 
 
@@ -94,7 +94,7 @@ class FakeHumanEnv(HumanInTheLoopEnv):
     @property
     def action_space(self) -> gym.Space:
         if self.config["use_discrete"]:
-            return gym.spaces.Discrete(self._num_bins ** 2)
+            return gym.spaces.Discrete(self._num_bins**2)
         else:
             return super(FakeHumanEnv, self).action_space
 
@@ -112,7 +112,6 @@ class FakeHumanEnv(HumanInTheLoopEnv):
             {
                 "use_discrete": False,
                 "disable_expert": False,
-
                 "agent_policy": EnvInputPolicy,
                 "free_level": 0.95,
                 "manual_control": False,

@@ -489,7 +489,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         reward: np.ndarray,
         dones: np.ndarray,
         infos: List[Dict[str, Any]],
-            backbone_features=None,
+        backbone_features=None,
     ) -> None:
         """
         Store transition in the replay buffer.

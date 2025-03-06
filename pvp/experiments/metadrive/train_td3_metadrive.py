@@ -62,22 +62,18 @@ if __name__ == '__main__':
             env=None,
             learning_rate=1e-4,
             optimize_memory_usage=True,
-
             learning_starts=200,
             batch_size=1024,
             tau=0.005,
             gamma=0.99,
             train_freq=1,
             gradient_steps=1,
-
             action_noise=None,
             # action_noise=NormalActionNoise(mean=np.zeros([2,]), sigma=0.15 * np.ones([2,])),
             # target_policy_noise=0,
             # policy_delay=1,
-
             tensorboard_log=trial_dir,
             create_eval_env=False,
-
             verbose=2,
             seed=seed,
             device="auto",
@@ -91,7 +87,6 @@ if __name__ == '__main__':
         log_dir=str(trial_dir)
     )
 
-
     # ===== Setup the training environment =====
     def make_train_env():
         env_config = dict(
@@ -104,12 +99,10 @@ if __name__ == '__main__':
         train_env = HumanInTheLoopEnv(config=env_config)
         return train_env
 
-
     train_env = make_train_env()
     train_env = Monitor(env=train_env, filename=str(trial_dir))
     config["algo"]["env"] = train_env
     assert config["algo"]["env"] is not None
-
 
     # ===== Also build the eval env =====
     def _make_eval_env():
@@ -125,17 +118,11 @@ if __name__ == '__main__':
         eval_env = Monitor(env=eval_env, filename=str(trial_dir))
         return eval_env
 
-
     eval_env = SubprocVecEnv([_make_eval_env])
 
     # ===== Setup the callbacks =====
     callbacks = [
-        CheckpointCallback(
-            name_prefix="rl_model",
-            verbose=1,
-            save_freq=1_0000,
-            save_path=str(trial_dir / "models")
-        )
+        CheckpointCallback(name_prefix="rl_model", verbose=1, save_freq=1_0000, save_path=str(trial_dir / "models"))
     ]
     if use_wandb:
         callbacks.append(

@@ -15,7 +15,7 @@ from pvp.sb3.common.vec_env import VecEnv
 
 import gymnasium
 
- 
+
 class OnPolicyAlgorithm(BaseAlgorithm):
     """
     The base for On-Policy algorithms (ex: A2C/PPO).
