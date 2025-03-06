@@ -1,16 +1,20 @@
 # [Proxy Value Propagation for Real (PVP4Real)](https://metadriverse.github.io/pvp4real/)
 
-<h3><b>ICLR 2025</b></h3>
+<h3 align="center"><b>ICLR 2025</b></h3>
 
-Official release for the code used in paper: *Learning from Active Human Involvement through Proxy Value Propagation*
+<p align="center">
+  <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="100%">
+</p>
 
-Compared to [PVP repo](https://metadriverse.github.io/pvp/), we include the simulated human experiments in this repo.
+Official release for the code used in paper: *Data-Efficient Learning from Human Interventions for Mobile Robots*. Compared to [PVP repo](https://metadriverse.github.io/pvp/), 
+we include the simulated human experiments in this repo.
 
 [**Webpage**](https://metadriverse.github.io/pvp4real/) | 
 [**Code**](https://github.com/metadriverse/pvp4real) |
 [**Paper** (Coming)](#)
 
-TODO: Teaser figure.
+
+
 
 ## Installation
 
