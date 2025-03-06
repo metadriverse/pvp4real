@@ -10,7 +10,10 @@ Compared to [PVP repo](https://metadriverse.github.io/pvp/), we include the simu
 [**Code**](https://github.com/metadriverse/pvp4real) |
 [**Paper** (Coming)](#)
 
-TODO: Teaser figure.
+<p align="center">
+  <img src="pvp4real_teaser.png" alt="Description" width="50%">
+</p>
+
 
 ## Installation
 
