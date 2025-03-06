@@ -3,7 +3,7 @@
 <h3 align="center"><b>ICLR 2025</b></h3>
 
 <p align="center">
-  <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="50%">
+  <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="100%">
 </p>
 
 Official release for the code used in paper: *Learning from Active Human Involvement through Proxy Value Propagation*
