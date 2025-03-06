@@ -63,18 +63,8 @@ if __name__ == '__main__':
             manual_control=False,  # Allow receiving control signal from external device
             # controller=control_device,
             # window_size=(1600, 1100),
-            horizon=1500,
         ),
         num_train_envs=4,
-
-        # ===== Environment =====
-        eval_env_config=dict(
-            use_render=False,  # Open the interface
-            manual_control=False,  # Allow receiving control signal from external device
-            start_seed=1000,
-            horizon=1500,
-        ),
-        num_eval_envs=1,
 
         # ===== Training =====
         algo=dict(
@@ -124,18 +114,20 @@ if __name__ == '__main__':
     assert config["algo"]["env"] is not None
 
     # ===== Also build the eval env =====
-    eval_env_config = config["eval_env_config"]
-
     def _make_eval_env():
+        eval_env_config = dict(
+            use_render=False,  # Open the interface
+            manual_control=False,  # Allow receiving control signal from external device
+            start_seed=1000,
+            horizon=1500,
+        )
         from pvp.experiments.metadrive.human_in_the_loop_env import HumanInTheLoopEnv
         from pvp.sb3.common.monitor import Monitor
         eval_env = HumanInTheLoopEnv(config=eval_env_config)
         eval_env = Monitor(env=eval_env, filename=str(trial_dir))
         return eval_env
 
-    eval_env_name = "metadrive_eval-v0"
-    register_env(_make_eval_env, eval_env_name)
-    eval_env = make_vec_env(_make_eval_env, n_envs=config["num_eval_envs"], vec_env_cls=vec_env_cls)
+    eval_env = SubprocVecEnv([_make_eval_env])
 
     # ===== Setup the callbacks =====
     save_freq = 1_0000  # Number of steps per model checkpoint
@@ -173,8 +165,8 @@ if __name__ == '__main__':
 
         # eval
         eval_env=eval_env,
-        eval_freq=200,
-        n_eval_episodes=100,
+        eval_freq=150,
+        n_eval_episodes=50,
         eval_log_path=str(trial_dir),
 
         # logging

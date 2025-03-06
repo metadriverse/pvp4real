@@ -32,17 +32,10 @@ class PVPTD3(TD3):
         if "replay_buffer_class" not in kwargs:
             kwargs["replay_buffer_class"] = HACOReplayBuffer
 
-        if "intervention_start_stop_td" in kwargs:
-            self.intervention_start_stop_td = kwargs["intervention_start_stop_td"]
-            kwargs.pop("intervention_start_stop_td")
-        else:
-            # Default to set it True. We find this can improve the performance and user experience.
-            self.intervention_start_stop_td = True
-
         self.extra_config = {}
         for k in ["no_done_for_positive", "no_done_for_negative", "reward_0_for_positive", "reward_0_for_negative",
                   "reward_n2_for_intervention", "reward_1_for_all", "use_weighted_reward", "remove_negative",
-                  "adaptive_batch_size", "add_bc_loss", "only_bc_loss"]:
+                  "adaptive_batch_size", "add_bc_loss", "only_bc_loss", "with_human_proxy_value_loss", "with_agent_proxy_value_loss"]:
             if k in kwargs:
                 v = kwargs.pop(k)
                 assert v in ["True", "False"]
@@ -77,6 +70,9 @@ class PVPTD3(TD3):
 
         # Update learning rate according to lr schedule
         self._update_learning_rate([self.actor.optimizer, self.critic.optimizer])
+
+        with_human_proxy_value_loss = self.extra_config["with_human_proxy_value_loss"]
+        with_agent_proxy_value_loss = self.extra_config["with_agent_proxy_value_loss"]
 
         stat_recorder = defaultdict(list)
 
@@ -141,30 +137,23 @@ class PVPTD3(TD3):
             # Compute critic loss
             critic_loss = []
             for (current_q_behavior, current_q_novice) in zip(current_q_behavior_values, current_q_novice_values):
-                # if self.intervention_start_stop_td:
-                #     l = 0.5 * F.mse_loss(
-                #         replay_data.stop_td * current_q_behavior, replay_data.stop_td * target_q_values
-                #     )
-                #
-                # else:
-                #     l = 0.5 * F.mse_loss(current_q_behavior, target_q_values)
+                l = F.mse_loss(current_q_behavior, target_q_values)
 
-                # ====== The key of Proxy Value Objective =====
-
-                l = 0.0
-
-                l += th.mean(
-                    replay_data.interventions * self.cql_coefficient *
-                    F.mse_loss(
-                        current_q_behavior, self.q_value_bound * th.ones_like(current_q_behavior), reduction="none"
+                if with_human_proxy_value_loss:
+                    l += th.mean(
+                        replay_data.interventions * self.cql_coefficient *
+                        F.mse_loss(
+                            current_q_behavior, self.q_value_bound * th.ones_like(current_q_behavior), reduction="none"
+                        )
                     )
-                )
-                l += th.mean(
-                    replay_data.interventions * self.cql_coefficient *
-                    F.mse_loss(
-                        current_q_novice, -self.q_value_bound * th.ones_like(current_q_behavior), reduction="none"
+
+                if with_agent_proxy_value_loss:
+                    l += th.mean(
+                        replay_data.interventions * self.cql_coefficient *
+                        F.mse_loss(
+                            current_q_novice, -self.q_value_bound * th.ones_like(current_q_behavior), reduction="none"
+                        )
                     )
-                )
 
                 critic_loss.append(l)
             critic_loss = sum(critic_loss)
@@ -179,20 +168,19 @@ class PVPTD3(TD3):
             if self._n_updates % self.policy_delay == 0:
                 # Compute actor loss
                 new_action = self.actor(replay_data.observations)
-                actor_loss = -self.critic.q1_forward(replay_data.observations, new_action).mean()
 
                 # BC loss on human data
                 bc_loss = F.mse_loss(replay_data.actions_behavior, new_action, reduction="none").mean(axis=-1)
                 masked_bc_loss = (replay_data.interventions.flatten() * bc_loss).sum() / (
                     replay_data.interventions.flatten().sum() + 1e-5
                 )
-                # masked_bc_loss = masked_bc_loss.mean()
 
                 if self.extra_config["only_bc_loss"]:
-                    # actor_loss = masked_bc_loss  #.mean()
-                    actor_loss = bc_loss.mean()  #.mean()
+                    actor_loss = masked_bc_loss
+                    # Critics will be completely useless.
 
                 else:
+                    actor_loss = -self.critic.q1_forward(replay_data.observations, new_action).mean()
                     if self.extra_config["add_bc_loss"]:
                         actor_loss += masked_bc_loss * self.extra_config["bc_loss_weight"]
                         # actor_loss += bc_loss.mean() * self.extra_config["bc_loss_weight"]

@@ -23,15 +23,6 @@ if __name__ == '__main__':
     parser.add_argument("--wandb_team", type=str, default="", help="The team name for wandb.")
     parser.add_argument("--log_dir", type=str, default="/data/zhenghao/pvp", help="Folder to store the logs.")
     parser.add_argument("--free_level", type=float, default=0.95)
-
-    parser.add_argument("--toy_env", action="store_true", help="Whether to use a toy environment.")
-    # parser.add_argument(
-    #     "--device",
-    #     required=True,
-    #     choices=['wheel', 'gamepad', 'keyboard'],
-    #     type=str,
-    #     help="The control device, selected from [wheel, gamepad, keyboard]."
-    # )
     args = parser.parse_args()
 
     # ===== Set up some arguments =====
@@ -120,13 +111,6 @@ if __name__ == '__main__':
         trial_name=trial_name,
         log_dir=str(trial_dir)
     )
-    if args.toy_env:
-        config["env_config"].update(
-            # Here we set num_scenarios to 1, remove all traffic, and fix the map to be a very simple one.
-            num_scenarios=1,
-            traffic_density=0.0,
-            map="COT"
-        )
 
     # ===== Setup the training environment =====
     train_env = FakeHumanEnv(config=config["env_config"], )
@@ -153,7 +137,7 @@ if __name__ == '__main__':
     eval_env = SubprocVecEnv([_make_eval_env])
 
     # ===== Setup the callbacks =====
-    save_freq = 500  # Number of steps per model checkpoint
+    save_freq = 10000  # Number of steps per model checkpoint
     callbacks = [
         CheckpointCallback(name_prefix="rl_model", verbose=1, save_freq=save_freq, save_path=str(trial_dir / "models"))
     ]
@@ -187,8 +171,8 @@ if __name__ == '__main__':
 
         # eval
         eval_env=eval_env,
-        eval_freq=200,
-        n_eval_episodes=100,
+        eval_freq=150,
+        n_eval_episodes=50,
         eval_log_path=str(trial_dir),
 
         # logging

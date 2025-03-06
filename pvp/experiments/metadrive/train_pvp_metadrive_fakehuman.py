@@ -1,25 +1,18 @@
-"""
-Compared to original file:
-1. use fakehumanenv
-2. new config: free_level
-3. buffer_size and total_timesteps set to 150_000
-"""
 import argparse
 import os
-from pathlib import Path
 import uuid
+from pathlib import Path
 
 from pvp.experiments.metadrive.egpo.fakehuman_env import FakeHumanEnv
-from pvp.experiments.metadrive.human_in_the_loop_env import HumanInTheLoopEnv
 from pvp.pvp_td3 import PVPTD3
 from pvp.sb3.common.callbacks import CallbackList, CheckpointCallback
 from pvp.sb3.common.monitor import Monitor
+from pvp.sb3.common.vec_env import SubprocVecEnv
 from pvp.sb3.common.wandb_callback import WandbCallback
 from pvp.sb3.haco import HACOReplayBuffer
 from pvp.sb3.td3.policies import TD3Policy
 from pvp.utils.shared_control_monitor import SharedControlMonitor
 from pvp.utils.utils import get_time_str
-from pvp.sb3.common.vec_env import DummyVecEnv, VecFrameStack, SubprocVecEnv
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -36,27 +29,14 @@ if __name__ == '__main__':
     parser.add_argument("--log_dir", type=str, default="/home/zhenghao/pvp", help="Folder to store the logs.")
     parser.add_argument("--free_level", type=float, default=0.95)
     parser.add_argument("--bc_loss_weight", type=float, default=0.0)
-
-    # parser.add_argument(
-    #     "--intervention_start_stop_td", default=True, type=bool, help="Whether to use intervention_start_stop_td."
-    # )
-
+    parser.add_argument("--with_human_proxy_value_loss", default="True", type=str)
+    parser.add_argument("--with_agent_proxy_value_loss", default="True", type=str)
     parser.add_argument("--adaptive_batch_size", default="False", type=str)
     parser.add_argument("--only_bc_loss", default="False", type=str)
     parser.add_argument("--ckpt", default="", type=str)
-
-    parser.add_argument("--toy_env", action="store_true", help="Whether to use a toy environment.")
-    # parser.add_argument(
-    #     "--device",
-    #     required=True,
-    #     choices=['wheel', 'gamepad', 'keyboard'],
-    #     type=str,
-    #     help="The control device, selected from [wheel, gamepad, keyboard]."
-    # )
     args = parser.parse_args()
 
     # ===== Set up some arguments =====
-    # control_device = args.device
     experiment_batch_name = "{}_freelevel{}".format(args.exp_name, args.free_level)
     seed = args.seed
     trial_name = "{}_{}_{}".format(experiment_batch_name, get_time_str(), uuid.uuid4().hex[:8])
@@ -100,6 +80,8 @@ if __name__ == '__main__':
             adaptive_batch_size=args.adaptive_batch_size,
             bc_loss_weight=args.bc_loss_weight,
             only_bc_loss=args.only_bc_loss,
+            with_human_proxy_value_loss=args.with_human_proxy_value_loss,
+            with_agent_proxy_value_loss=args.with_agent_proxy_value_loss,
             add_bc_loss="True" if args.bc_loss_weight > 0.0 else "False",
             use_balance_sample=True,
             agent_data_ratio=1.0,
@@ -134,13 +116,6 @@ if __name__ == '__main__':
         trial_name=trial_name,
         log_dir=str(trial_dir)
     )
-    if args.toy_env:
-        config["env_config"].update(
-            # Here we set num_scenarios to 1, remove all traffic, and fix the map to be a very simple one.
-            num_scenarios=1,
-            traffic_density=0.0,
-            map="COT"
-        )
 
     # ===== Setup the training environment =====
     train_env = FakeHumanEnv(config=config["env_config"], )
@@ -191,9 +166,9 @@ if __name__ == '__main__':
         ckpt = Path(args.ckpt)
         print(f"Loading checkpoint from {ckpt}!")
         from pvp.sb3.common.save_util import load_from_zip_file
+
         data, params, pytorch_variables = load_from_zip_file(ckpt, device=model.device, print_system_info=False)
         model.set_parameters(params, exact_match=True, device=model.device)
-
 
     # ===== Launch training =====
     model.learn(
@@ -201,12 +176,6 @@ if __name__ == '__main__':
         total_timesteps=50_000,
         callback=callbacks,
         reset_num_timesteps=True,
-
-        # eval
-        # eval_env=None,
-        # eval_freq=-1,
-        # n_eval_episodes=2,
-        # eval_log_path=None,
 
         # eval
         eval_env=eval_env,
