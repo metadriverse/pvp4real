@@ -1,6 +1,6 @@
 # [Proxy Value Propagation for Real (PVP4Real)](https://metadriverse.github.io/pvp4real/)
 
-<h3><b>ICLR</b></h3>
+<h3><b>ICLR 2025</b></h3>
 
 Official release for the code used in paper: *Learning from Active Human Involvement through Proxy Value Propagation*
 
@@ -62,9 +62,9 @@ python pvp/experiments/metadrive/train_pvp_metadrive_fakehuman.py --exp_name="pv
 
 
 
+---
 
-
-> [!TIP]
+Tips:
 
 We evaluate frequently to get beautiful learning curves. You can change the evaluation frequency when debugging:
 
