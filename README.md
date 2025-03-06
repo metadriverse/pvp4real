@@ -40,12 +40,33 @@ pip install git+https://github.com/metadriverse/metadrive.git
 
 ## Launch Experiments
 
+You can find the scripts to launch a batch of experiments in the [`./scripts`](./scripts) folder. Call them by:
+
+```bash
+bash scripts/metadrive_simhuman_pvp4real.sh
+bash scripts/metadrive_simhuman_pvp.sh
+bash scripts/metadrive_simhuman_haco.sh
+bash scripts/metadrive_simhuman_ppo.sh
+bash scripts/metadrive_simhuman_td3.sh
+bash scripts/metadrive_simhuman_bc.sh
+bash scripts/metadrive_simhuman_eil.sh
+bash scripts/metadrive_simhuman_hgdagger.sh
+```
+
+
+Here is the example on how to launch PVP4Real:
+
+```bash
+python pvp/experiments/metadrive/train_pvp_metadrive_fakehuman.py --exp_name="pvp4real" --bc_loss_weight=1.0
+```
 
 
 
-Tips:
 
-We evaluate frequently to get beautiful learning curves. You can change the evaluation frequency:
+
+> [!TIP]
+
+We evaluate frequently to get beautiful learning curves. You can change the evaluation frequency when debugging:
 
 ```python
 model.learn(
@@ -54,6 +75,21 @@ model.learn(
     n_eval_episodes=50,  # <<< Change this
 )
 ```
+
+You can use wandb to monitor the training process:
+
+```bash
+nohup python pvp/experiments/metadrive/train_pvp_metadrive_fakehuman.py \
+--exp_name=${EXP_NAME} \
+--wandb \
+--wandb_project=pvp2024 \
+--wandb_team=drivingforce
+```
+
+> [!NOTE]  
+> The BC, HGDagger and EIL experiments are not strictly following the paper.
+> The BC data is not collected before training but instead collected and is expanding
+> during the training process. 
 
 ## 📎 References
 
