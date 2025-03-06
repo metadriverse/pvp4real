@@ -2,6 +2,9 @@
 
 <h3 align="center"><b>ICLR 2025</b></h3>
 
+<p align="center">
+  <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="50%">
+</p>
 
 Official release for the code used in paper: *Learning from Active Human Involvement through Proxy Value Propagation*
 
@@ -11,9 +14,6 @@ Compared to [PVP repo](https://metadriverse.github.io/pvp/), we include the simu
 [**Code**](https://github.com/metadriverse/pvp4real) |
 [**Paper** (Coming)](#)
 
-<p align="center">
-  <img src="pvp4real_teaser.png" alt="PVP4Real" width="50%">
-</p>
 
 
 
