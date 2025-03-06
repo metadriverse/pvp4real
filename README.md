@@ -3,7 +3,7 @@
 <h3 align="center"><b>ICLR 2025</b></h3>
 
 <p align="center">
-  <img src="pvp4real_teaser.png" alt="Description" width="50%">
+  <img src="pvp4real_teaser.png" alt="PVP4Real" width="50%">
 </p>
 
 
