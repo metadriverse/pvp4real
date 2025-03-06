@@ -24,11 +24,17 @@ conda create -n pvp4real python=3.7
 conda activate pvp4real
 
 # Install dependencies
+pip install setuptools==65.5.0 pip==21  # Fix gym installation issue
+pip install wheel==0.38.0  # Fix gym installation issue
 pip install -r requirements.txt
 pip install -e .
+pip install torch
 
 # Install MetaDrive
+# In case you need it, the MetaDrive commit we ran on is: c29cc37d30158fe70d963647b6c80dc814248f60
+# Using latest MetaDrive should work:
 pip install git+https://github.com/metadriverse/metadrive.git
+
 ```
 
 
@@ -36,6 +42,18 @@ pip install git+https://github.com/metadriverse/metadrive.git
 
 
 
+
+Tips:
+
+We evaluate frequently to get beautiful learning curves. You can change the evaluation frequency:
+
+```python
+model.learn(
+    ...
+    eval_freq=150,  # <<< Change this
+    n_eval_episodes=50,  # <<< Change this
+)
+```
 
 ## 📎 References
 

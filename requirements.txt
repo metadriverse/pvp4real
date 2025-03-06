@@ -25,7 +25,6 @@ pickle5
 # opencv-python==4.2.0.34
 # evdev
 pickle5==0.0.11
-stable-baselines3==1.4.0
 pyglet
 minigrid==2.3.1
 easydict
