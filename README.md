@@ -6,9 +6,8 @@
   <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="100%">
 </p>
 
-Official release for the code used in paper: *Learning from Active Human Involvement through Proxy Value Propagation*
-
-Compared to [PVP repo](https://metadriverse.github.io/pvp/), we include the simulated human experiments in this repo.
+Official release for the code used in paper: *Data-Efficient Learning from Human Interventions for Mobile Robots*. Compared to [PVP repo](https://metadriverse.github.io/pvp/), 
+we include the simulated human experiments in this repo.
 
 [**Webpage**](https://metadriverse.github.io/pvp4real/) | 
 [**Code**](https://github.com/metadriverse/pvp4real) |
