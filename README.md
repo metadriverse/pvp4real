@@ -11,7 +11,7 @@ we include the simulated human experiments in this repo.
 
 [**Webpage**](https://metadriverse.github.io/pvp4real/) | 
 [**Code**](https://github.com/metadriverse/pvp4real) |
-[**Paper** (Coming)](https://arxiv.org/pdf/2503.04969)
+[**Paper**](https://arxiv.org/pdf/2503.04969)
 
 
 
