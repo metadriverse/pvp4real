@@ -1,17 +1,20 @@
-# [Proxy Value Propagation for Real (PVP4Real)](https://metadriverse.github.io/pvp4real/)
 
-<h3 align="center"><b>ICRA 2025</b></h3>
+<h1 align="center">Data-Efficient Learning from Human Interventions for Mobile Robots</h1>
+
+<h3 align="center"><b>ICRA 2025</b>
+</h3>
+
+<h3 align="center">
+  <a href="https://metadriverse.github.io/pvp4real/"><b>Webpage</b></a> |
+  <a href="https://github.com/metadriverse/pvp4real"><b>Code</b></a> |
+  <a href="https://arxiv.org/pdf/2503.04969"><b>PDF</b></a>
+</h3>
 
 <p align="center">
   <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="100%">
 </p>
 
-Official release for the code used in paper: *Data-Efficient Learning from Human Interventions for Mobile Robots*. Compared to [PVP repo](https://metadriverse.github.io/pvp/), 
-we include the simulated human experiments in this repo.
-
-[**Webpage**](https://metadriverse.github.io/pvp4real/) | 
-[**Code**](https://github.com/metadriverse/pvp4real) |
-[**Paper**](https://arxiv.org/pdf/2503.04969)
+Compared to [PVP repo](https://metadriverse.github.io/pvp/), we include the simulated human experiments in this repo.
 
 
 
@@ -100,6 +103,10 @@ nohup python pvp/experiments/metadrive/train_pvp_metadrive_fakehuman.py \
 ## 📎 References
 
 ```latex
-Coming soon...
+@article{peng2025data,
+  title={Data-Efficient Learning from Human Interventions for Mobile Robots},
+  author={Peng, Zhenghao and Liu, Zhizheng and Zhou, Bolei},
+  journal={arXiv preprint arXiv:2503.04969},
+  year={2025}
+}
 ```
-
