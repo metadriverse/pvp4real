@@ -1,6 +1,6 @@
 # [Proxy Value Propagation for Real (PVP4Real)](https://metadriverse.github.io/pvp4real/)
 
-<h3 align="center"><b>ICLR 2025</b></h3>
+<h3 align="center"><b>ICRA 2025</b></h3>
 
 <p align="center">
   <img src="PVP4Real_Teaser.png" alt="PVP4Real" width="100%">
@@ -11,7 +11,7 @@ we include the simulated human experiments in this repo.
 
 [**Webpage**](https://metadriverse.github.io/pvp4real/) | 
 [**Code**](https://github.com/metadriverse/pvp4real) |
-[**Paper** (Coming)](#)
+[**Paper** (Coming)](https://arxiv.org/pdf/2503.04969)
 
 
 
