@@ -7,15 +7,25 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update package lists and install additional packages (e.g., pip and other tools)
 RUN apt-get update && apt-get install -y \
     python3-pip \
+    iputils-ping \
     git \
     vim \
     ros-foxy-rmw-cyclonedds-cpp \
     ros-foxy-rosidl-generator-dds-idl \
     && rm -rf /var/lib/apt/lists/*
 
-# Optionally, copy your Python requirements file and install dependencies
-# COPY requirements.txt /tmp/requirements.txt
-# RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+# Copy your entire repository into the container
+# TODO: We should avoid copying entire repo as user might update the pvp folder.
+COPY . /app
+
+# Build the Unitree SDK:
+# Change to the unitree_sdk2 folder, make install.sh executable and run it,
+# then create a build directory, run cmake and make.
+WORKDIR /app/unitree_sdk2
+RUN mkdir build && \
+    cd build && \
+    cmake .. && \
+    sudo make install
 
 # Create a dedicated directory for your application code
 WORKDIR /app
@@ -30,4 +40,5 @@ RUN chmod +x docker_start.sh
 EXPOSE 8080
 
 # Set the entrypoint to start your application
-CMD ["./docker_start.sh"]
+ENTRYPOINT ["./docker_start.sh"]
+CMD ["bash"]

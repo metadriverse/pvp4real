@@ -1,0 +1,13 @@
+services:
+  go2:
+    image: pvp4real-go2:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    privileged: true
+    network_mode: "host"
+    stdin_open: true
+    tty: true
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
