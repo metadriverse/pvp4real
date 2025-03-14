@@ -1,3 +1,6 @@
 [submodule "unitree_sdk2"]
 	path = unitree_sdk2
 	url = https://github.com/unitreerobotics/unitree_sdk2.git
+[submodule "unitree_ros2"]
+	path = unitree_ros2
+	url = https://github.com/unitreerobotics/unitree_ros2
