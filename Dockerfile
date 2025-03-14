@@ -30,15 +30,15 @@ RUN mkdir build && \
 # Create a dedicated directory for your application code
 WORKDIR /app
 
-# Copy your docker_start.sh script into /app
-COPY docker_start.sh .
+# Copy your docker_internal_start.sh script into /app
+COPY docker_internal_start.sh .
 
-# Ensure that docker_start.sh is executable
-RUN chmod +x docker_start.sh
+# Ensure that docker_internal_start.sh is executable
+RUN chmod +x docker_internal_start.sh
 
 # Expose any ports your application uses (if applicable)
 EXPOSE 8080
 
 # Set the entrypoint to start your application
-ENTRYPOINT ["./docker_start.sh"]
+ENTRYPOINT ["./docker_internal_start.sh"]
 CMD ["bash"]
