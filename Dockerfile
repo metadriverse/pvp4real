@@ -18,14 +18,33 @@ RUN apt-get update && apt-get install -y \
 # TODO: We should avoid copying entire repo as user might update the pvp folder.
 COPY . /app
 
+# ===== Installing unitree_sdk2 =====
 # Build the Unitree SDK:
 # Change to the unitree_sdk2 folder, make install.sh executable and run it,
 # then create a build directory, run cmake and make.
-WORKDIR /app/unitree_sdk2
-RUN mkdir build && \
-    cd build && \
-    cmake .. && \
-    sudo make install
+#WORKDIR /app/unitree_sdk2
+#RUN mkdir build && \
+#    cd build && \
+#    cmake .. && \
+#    sudo make install
+# TODO: As we are using Unitree ROS2, do we really need Unitree SDK???
+# ===== Installing unitree_sdk2 =====
+
+# ===== Installing unitree_ros2 =====
+# Following https://github.com/unitreerobotics/unitree_ros2
+# To get unitree_ros2 installed.
+WORKDIR /app/unitree_ros2/cyclonedds_ws/src
+RUN git clone https://github.com/ros2/rmw_cyclonedds -b foxy && \
+    git clone https://github.com/eclipse-cyclonedds/cyclonedds -b releases/0.10.x && \
+    cd .. && \
+    colcon build --packages-select cyclonedds
+# Now, source the ROS2 environment and build the rest of the packages,
+# skipping cyclone‑dds (which has already been built)
+WORKDIR /app/unitree_ros2/cyclonedds_ws
+RUN bash -c "source /opt/ros/foxy/setup.bash && \
+             pwd && \
+             colcon build --packages-skip cyclonedds"
+# ===== Installing unitree_ros2 =====
 
 # Create a dedicated directory for your application code
 WORKDIR /app
