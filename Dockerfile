@@ -43,7 +43,9 @@ RUN git clone https://github.com/ros2/rmw_cyclonedds -b foxy && \
 WORKDIR /app/unitree_ros2/cyclonedds_ws
 RUN bash -c "source /opt/ros/foxy/setup.bash && \
              pwd && \
-             colcon build --packages-skip cyclonedds"
+             colcon build"
+# Double check whether the build was successful
+RUN ls -l /app/unitree_ros2/cyclonedds_ws/install
 # ===== Installing unitree_ros2 =====
 
 # Create a dedicated directory for your application code
